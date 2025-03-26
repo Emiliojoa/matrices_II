@@ -11,7 +11,7 @@ Este es un sistema de consola (CMD/Terminal) que permite registrar personas con 
 ### 🔹 Instalación en JavaScript
 1. Clona este repositorio:
    ```sh
-   git clone https://github.com/MarceloOrtegaDev/Matrices_Multidimensionales_II.git
+   git clone https://github.com/Emiliojoa/matrices_II.git
 
    cd y el nombre de la carpeta clonada
    
@@ -19,7 +19,7 @@ Este es un sistema de consola (CMD/Terminal) que permite registrar personas con 
 
 ## Instalación de dependencias
 
-```sh
+```bash
 npm install
 
 ## Ejecuta el programa
