@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Suma de Matrices</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #2c3e50;
+            text-align: center;
+        }
+        .container {
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        input {
+            width: 60px;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        button {
+            background-color: #3498db;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 10px;
+        }
+        button:hover {
+            background-color: #2980b9;
+        }
+        .matrix-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+        .matrix {
+            margin-bottom: 20px;
+            flex: 1;
+            min-width: 200px;
+            margin-right: 10px;
+        }
+        .matrix-row {
+            display: flex;
+            margin-bottom: 5px;
+        }
+        .result {
+            background-color: #e8f4fc;
+            padding: 15px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        .error {
+            color: red;
+            margin-top: 10px;
+        }
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Suma de Matrices</h1>
+        
+        <!-- Paso 1: Solicitar dimensiones -->
+        <div id="dimensiones">
+            <h2>Paso 1: Dimensiones de las matrices</h2>
+            <div class="form-group">
+                <label for="filas">Número de filas:</label>
+                <input type="number" id="filas" min="1" max="10" value="2">
+            </div>
+            <div class="form-group">
+                <label for="columnas">Número de columnas:</label>
+                <input type="number" id="columnas" min="1" max="10" value="2">
+            </div>
+            <button onclick="generarMatrices()">Generar Matrices</button>
+        </div>
+        
+        <!-- Paso 2: Ingresar valores de las matrices -->
+        <div id="valores" class="hidden">
+            <h2>Paso 2: Ingresar valores de las matrices</h2>
+            <div class="matrix-container">
+                <div class="matrix" id="matriz1">
+                    <h3>Matriz 1</h3>
+                    <!-- Aquí se generan dinámicamente los inputs -->
+                </div>
+                <div class="matrix" id="matriz2">
+                    <h3>Matriz 2</h3>
+                    <!-- Aquí se generan dinámicamente los inputs -->
+                </div>
+            </div>
+            <button onclick="sumarMatrices()">Sumar Matrices</button>
+            <div id="error" class="error hidden"></div>
+        </div>
+        
+        <!-- Paso 4: Mostrar resultado -->
+        <div id="resultado" class="result hidden">
+            <h2>Resultado de la Suma</h2>
+            <div id="matrizResultado">
+                <!-- Aquí se mostrará la matriz resultante -->
+            </div>
+            <button onclick="reiniciar()">Reiniciar</button>
+        </div>
+    </div>
+    
+    <script>
+        // Función para generar las matrices según las dimensiones especificadas
+        function generarMatrices() {
+            const filas = parseInt(document.getElementById('filas').value);
+            const columnas = parseInt(document.getElementById('columnas').value);
+            
+            if (filas < 1 || columnas < 1 || filas > 10 || columnas > 10) {
+                alert("Por favor ingrese dimensiones válidas (entre 1 y 10)");
+                return;
+            }
+            
+            // Generar matriz 1
+            const matriz1 = document.getElementById('matriz1');
+            matriz1.innerHTML = "<h3>Matriz 1</h3>";
+            
+            for (let i = 0; i < filas; i++) {
+                const row = document.createElement('div');
+                row.className = 'matrix-row';
+                
+                for (let j = 0; j < columnas; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = `m1-${i}-${j}`;
+                    // input.value = Math.floor(Math.random() * 10); // Valores aleatorios para facilitar pruebas
+                    row.appendChild(input);
+                }
+                
+                matriz1.appendChild(row);
+            }
+            
+            // Generar matriz 2
+            const matriz2 = document.getElementById('matriz2');
+            matriz2.innerHTML = "<h3>Matriz 2</h3>";
+            
+            for (let i = 0; i < filas; i++) {
+                const row = document.createElement('div');
+                row.className = 'matrix-row';
+                
+                for (let j = 0; j < columnas; j++) {
+                    const input = document.createElement('input');
+                    input.type = 'number';
+                    input.id = `m2-${i}-${j}`;
+                    input.value = Math.floor(Math.random() * 10); // Valores aleatorios para facilitar pruebas
+                    row.appendChild(input);
+                }
+                
+                matriz2.appendChild(row);
+            }
+            
+            // Mostrar sección de valores y ocultar sección de dimensiones
+            document.getElementById('dimensiones').classList.add('hidden');
+            document.getElementById('valores').classList.remove('hidden');
+        }
+        
+        // Función para validar y sumar las matrices
+        function sumarMatrices() {
+            const filas = parseInt(document.getElementById('filas').value);
+            const columnas = parseInt(document.getElementById('columnas').value);
+            
+            // Crear arreglos para almacenar los valores de las matrices
+            const matriz1 = [];
+            const matriz2 = [];
+            
+            // Validar que todos los campos tengan valores numéricos
+            let todosNumericos = true;
+            
+            // Leer y validar matriz 1
+            for (let i = 0; i < filas; i++) {
+                matriz1[i] = [];
+                for (let j = 0; j < columnas; j++) {
+                    const valor = document.getElementById(`m1-${i}-${j}`).value;
+                    if (valor === "" || isNaN(parseFloat(valor))) {
+                        document.getElementById('error').textContent = "Todos los campos deben contener valores numéricos";
+                        document.getElementById('error').classList.remove('hidden');
+                        todosNumericos = false;
+                        return;
+                    }
+                    matriz1[i][j] = parseFloat(valor);
+                }
+            }
+            
+            // Leer y validar matriz 2
+            for (let i = 0; i < filas; i++) {
+                matriz2[i] = [];
+                for (let j = 0; j < columnas; j++) {
+                    const valor = document.getElementById(`m2-${i}-${j}`).value;
+                    if (valor === "" || isNaN(parseFloat(valor))) {
+                        document.getElementById('error').textContent = "Todos los campos deben contener valores numéricos";
+                        document.getElementById('error').classList.remove('hidden');
+                        todosNumericos = false;
+                        return;
+                    }
+                    matriz2[i][j] = parseFloat(valor);
+                }
+            }
+            
+            if (todosNumericos) {
+                document.getElementById('error').classList.add('hidden');
+                
+                // Paso 3: Realizar la suma de matrices (en el cliente, simulando servidor)
+                const matrizResultado = [];
+                
+                for (let i = 0; i < filas; i++) {
+                    matrizResultado[i] = [];
+                    for (let j = 0; j < columnas; j++) {
+                        matrizResultado[i][j] = matriz1[i][j] + matriz2[i][j];
+                    }
+                }
+                
+                // Paso 4: Mostrar la matriz resultante
+                mostrarResultado(matrizResultado, filas, columnas);
+            }
+        }
+        
+        // Función para mostrar la matriz resultante
+        function mostrarResultado(matriz, filas, columnas) {
+            const matrizResultado = document.getElementById('matrizResultado');
+            matrizResultado.innerHTML = "";
+            
+            for (let i = 0; i < filas; i++) {
+                const row = document.createElement('div');
+                row.className = 'matrix-row';
+                
+                for (let j = 0; j < columnas; j++) {
+                    const valor = document.createElement('input');
+                    valor.type = 'text';
+                    valor.value = matriz[i][j];
+                    valor.readOnly = true;
+                    row.appendChild(valor);
+                }
+                
+                matrizResultado.appendChild(row);
+            }
+            
+            // Ocultar sección de valores y mostrar resultado
+            document.getElementById('valores').classList.add('hidden');
+            document.getElementById('resultado').classList.remove('hidden');
+        }
+        
+        // Función para reiniciar el proceso
+        function reiniciar() {
+            document.getElementById('resultado').classList.add('hidden');
+            document.getElementById('dimensiones').classList.remove('hidden');
+        }
+    </script>
+</body>
+</html>
