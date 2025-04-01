@@ -80,7 +80,7 @@ def mostrar_matriz(matriz):
     
     for fila in matriz:
         # Formatear cada número con 6 espacios y 2 decimales
-        fila_formateada = [f"{num:6.2f}" for num in fila]
+        fila_formateada = [f"{num:6.2f1}" for num in fila]
         print("[", " ".join(fila_formateada), "]")
 
 if __name__ == "__main__":
